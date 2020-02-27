@@ -8,51 +8,16 @@
     <div class="container">
         <!-- row1 player -->
         <div class="row">
-            <div class="<?php if($this->common_model->get_ads_status('sidebar')=='1'): echo "col-md-9 col-sm-6"; else: echo "col-md-12 col-sm-12"; endif; ?>">
-                <?php if($this->common_model->get_ads_status('player_top')=='1'): ?>
-                    <!-- player top to ads -->
-                    <div class="row">
-                        <div class="col-md-12 text-center m-b-10">
-                            <?php echo $this->common_model->get_ads('player_top'); ?>
-                        </div>
-                    </div>
-                    <!-- player top to ads -->
-                <?php endif; ?>
-                <!-- player -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <?php
-                            if($watch_videos->is_tvseries =='1'):
-                                $this->load->view($theme_dir.'tvseries_player');
-                            else:
-                                $this->load->view($theme_dir.'movie_player');
-                            endif;
-                        ?>
-                    </div>
-                </div>
-                <!-- End player -->
-                <?php if($this->common_model->get_ads_status('player_bottom')=='1'): ?>
-                    <!-- player bottom to ads -->
-                    <div class="row">
-                        <div class="col-md-12 text-center m-b-10">
-                            <?php echo $this->common_model->get_ads('player_bottom'); ?>
-                        </div>
-                    </div>
-                    <!-- player bottom to ads -->
-                <?php endif; ?>
+            <div class="col-md-12">
+                <h1 style="color: #fff !important;">
+                    <?php echo $watch_videos->title;?>
+                </h1>
             </div>
-            <?php if($this->common_model->get_ads_status('sidebar')=='1'): ?>
-                <!-- sidebar ads -->
-                <div class="col-md-3 col-sm-6">
-                    <div class="sidebar">
-                        <div class="ad_300x250 m-b-10">
-                             <?php echo $this->common_model->get_ads('sidebar'); ?>    
-                        </div>
-                    </div>
-                </div>
-                <!-- End sidebar ads -->
-            <?php endif; ?>
-        </div>        
+            <div class="col-md-12">
+                <img class="img-responsive" style="min-width: 183px;" src="<?php echo $this->common_model->get_video_poster_url($watch_videos->videos_id); ?>" alt="<?php echo $watch_videos->title;?>">
+            </div>
+        </div>
+              
         <!-- End row1 player -->
 
         <!-- row2 movie info -->
@@ -61,7 +26,7 @@
                 <!-- movie info -->
                 <div class="row movies-list-wrap">
                 <div class="ml-title">
-                    <span class="pull-left title"><?php echo $watch_videos->title;?></span>
+                   
                     <ul role="tablist" class="nav nav-tabs">
                         <li style="display: none;"><a data-toggle="tab" href="#in" style="display: none;"><?php echo trans('info'); ?></a></li>
                         <li class="active"><a data-toggle="tab" href="#info"><?php echo trans('info'); ?></a></li>
@@ -73,6 +38,12 @@
                         <?php if($total_download_links >0 && $watch_videos->enable_download =='1'): ?>
                         <li><a data-toggle="tab" href="#download"><?php echo trans('download'); ?></a></li>
                         <?php endif; ?>
+
+                        <?php if($total_seasons_links>0 && $watch_videos->enable_download =='1'): ?>
+                            <li><a data-toggle="tab" href="#download_seasons"><?php echo trans('download'); ?></a></li>
+                        <?php endif; ?>
+
+                        
                     </ul>
                     <div class="clearfix"></div>
                     <div class="tab-content">
@@ -82,11 +53,12 @@
                                 <div class="col-md-9">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h1>
+                                            <h1 style="color: #fff !important;">
                                                 <?php echo $watch_videos->title;?>
                                             </h1>
-                                            <button class="btn btn-sm btn-default" onclick="wish_list_add('fav','<?php echo $watch_videos->videos_id;?>')"><i class="fa fa-heart-o"></i></button>
-                                            <button class="btn btn-sm btn-default" onclick="wish_list_add('wl','<?php echo $watch_videos->videos_id;?>')"><i class="fa fa-clock-o"></i></button>
+
+                                           <!--  <button class="btn btn-sm btn-default" onclick="wish_list_add('fav','<?php echo $watch_videos->videos_id;?>')"><i class="fa fa-heart-o"></i></button>
+                                            <button class="btn btn-sm btn-default" onclick="wish_list_add('wl','<?php echo $watch_videos->videos_id;?>')"><i class="fa fa-clock-o"></i></button> -->
                                             
                                             <?php  if($this->db->get_where('config' , array('title' =>'social_share_enable'))->row()->value =='1'):?>
                                             
@@ -216,6 +188,20 @@
                           <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
+
+
+                    <?php if($total_seasons_links >0 && $watch_videos->enable_download =='1'): ?>
+                        <div id="download_seasons" class="tab-pane fade m-t-10">
+                          <?php foreach($seasons as $season): ?>
+                                <a class='btn btn-default btn-inline btn-sm' href="<?php echo urldecode($season['download_url']); ?>"><span class="btn-label"><i class="fa fa-download"></i></span><?php echo $season['seasons_name'] ?></a>
+                                <?php foreach ($season['episodes'] as $episode)?>
+                                    <p><?php echo $episode['episodes_name']; ?></p>
+                                <?php endforeach ?>
+                          <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    
                     <?php if($show_star_image =='1'): ?>
                         <div id="actor_tab" class="tab-pane m-t-10">
                             <div class="row">

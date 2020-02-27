@@ -32,7 +32,16 @@ class Watch extends Home_Core_Controller{
             $data['total_download_links']   = count($data['download_links']);
             $data['video_files']            = $this->db->get_where('video_file', array('videos_id'=> $data['videos_id']))->result_array();
             $data['total_video_files']      = count($data['video_files']);
-            $data['total_episodes']         = $this->db->get_where('episodes', array('videos_id'=> $data['videos_id']))->num_rows();
+            $data['total_episodes']         = $this->db->get_where('episodes', array('videos_id'=> $data['videos_id']))->result_array();
+            $data['total_episodes_links']   = count($data['total_episodes']);
+
+            $data['total_seasons']         = $this->db->get_where('seasons', array('videos_id'=> $data['videos_id']))->result_array();
+
+            $data['total_seasons_links']   = count($data['total_seasons']);
+
+            $data['seasons']            = $this->get_season_episode($data['videos_id']); 
+              
+
             $data['slug']                   = $slug;
             $data['param1']                 = $param1;
             $data['param2']                 = $param2;
@@ -54,6 +63,59 @@ class Watch extends Home_Core_Controller{
         else:
             redirect('notfound');
         endif;
+    }
+
+     function get_season_episode($videos_id=''){
+        $response   =   array();
+        $this->db->order_by('seasons_id','DESC');
+        $this->db->where('videos_id',$videos_id);
+        $query      =   $this->db->get('seasons');
+        if($query->num_rows() > 0):
+            $seasons = $query->result_array();
+            $i              =   0;
+            foreach ($seasons as $season):
+                $response[$i]['seasons_id']     = $season['seasons_id'];
+                $response[$i]['seasons_name']   = $season['seasons_name'];
+                $response[$i]['download_url']   = $season['download_url'];
+                $response[$i]['episodes']       = $this->get_episodes_with_all_video_by_movie_id($season['seasons_id']);
+                $i++;
+            endforeach;
+        endif;
+        return $response;
+    }
+
+    function get_episodes_with_all_video_by_movie_id($seasons_id){
+        $response   =   array();
+        $this->db->where('seasons_id',$seasons_id);
+        $query = $this->db->get('episodes');
+        if($query->num_rows() > 0):
+            $episodes   =   $query->result_array();
+            $i          =   0;
+            foreach ($episodes as $episode):
+                $response[$i]['episodes_id']     = $episode['episodes_id'];
+                $response[$i]['episodes_name']   = $episode['episodes_name'];
+                $response[$i]['stream_key']      = $episode['stream_key'];
+                $response[$i]['file_type']       = $episode['file_source'];
+
+                $response[$i]['file_url']        = $episode['file_url'];
+                $response[$i]['file_size']   = $episode['file_size'];
+
+
+                if($episode['file_source'] =='gdrive'):
+                    $response[$i]['file_type']          = 'embed';
+                elseif($episode['file_source'] =='amazone'):
+                    $response[$i]['file_type']          = 'mp4';
+                elseif($episode['file_source'] =='m3u8'):
+                    $response[$i]['file_type']          = 'hls';
+                elseif($episode['file_source'] =='vimeo'):
+                    $response[$i]['file_type']          = 'embed';
+                    $response[$i]['file_url']           = str_replace('vimeo','player.vimeo',$episode['file_url']);
+                    $response[$i]['file_url']           = str_replace('.com/','.com/video/',$response[$i]['file_url']);
+                endif;
+                $i++;
+            endforeach;
+        endif;
+        return $response;
     }
 
 }
