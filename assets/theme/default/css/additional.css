@@ -1,0 +1,33 @@
+/*!
+ * Ovoo-Movie & Video Steaming CMS
+ * Author: Abdul Mannan/Spa Green Creative
+ =============*/
+.btn-fb {
+    color: #fff;
+    background-color: #4267b2;
+    border-color: #4267B3;
+}
+.btn-fb:active, .btn-fb:hover {
+    background: #3B5CA0;
+    color: #fff;
+}
+
+.btn-gplus {
+    color: #fff;
+    background-color: #E93F2E;
+    border-color: #b72213;
+}
+.btn-gplus:active, .btn-gplus:hover {
+    background: #b72213;
+    color: #fff;
+}
+
+.video_quality, .total_episodes{
+    position: absolute;
+    top: 5px;
+    left:5px;
+    z-index: 111;
+}
+.label-primary {
+    background-color: #673ab7;
+}
