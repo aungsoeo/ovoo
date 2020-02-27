@@ -183,9 +183,35 @@
                         </div>
                     <?php if($total_download_links >0 && $watch_videos->enable_download =='1'): ?>
                         <div id="download" class="tab-pane fade m-t-10">
-                          <?php foreach($download_links as $dw_link): ?>
-                                <a class='btn btn-default btn-inline btn-sm' href="<?php echo urldecode($dw_link['download_url']); ?>"><span class="btn-label"><i class="fa fa-download"></i></span><?php echo $dw_link['link_title'] ?></a>
-                          <?php endforeach; ?>
+                         
+                            <div class="row" style="margin-left: 10px; margin-right: 10px; color: #fff;">
+                                <table class="table table-responsive table-bordered" width="90%" style="border-color: #fff !important;">
+                                    <thead>
+                                        <th>Link</th>
+                                        <th>File Size</th>
+                                        <th>Donwload</th>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($download_links as $dw_link): ?>
+                                        <tr>
+                                            <td width="30%">
+                                                <?php echo $dw_link['link_title'] ?>
+                                            </td>
+                                            <td width="30%">
+                                                <?php echo $episode['file_size'] ?>
+                                            </td>
+                                            <td width="30%">
+                                                 <a class='btn btn-default btn-inline btn-sm' href="<?php echo urldecode($dw_link['download_url']); ?>"><span class="btn-label"><i class="fa fa-download"></i></span>
+                                                    <?php echo trans('download'); ?>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+        
+                          
                         </div>
                     <?php endif; ?>
 
@@ -193,10 +219,38 @@
                     <?php if($total_seasons_links >0 && $watch_videos->enable_download =='1'): ?>
                         <div id="download_seasons" class="tab-pane fade m-t-10">
                           <?php foreach($seasons as $season): ?>
-                                <a class='btn btn-default btn-inline btn-sm' href="<?php echo urldecode($season['download_url']); ?>"><span class="btn-label"><i class="fa fa-download"></i></span><?php echo $season['seasons_name'] ?></a>
-                                <?php foreach ($season['episodes'] as $episode)?>
-                                    <p><?php echo $episode['episodes_name']; ?></p>
-                                <?php endforeach ?>
+                                <h4 style="color: #fff;"><?php echo $season['seasons_name'] ?></h4>
+                               
+                                    <div class="row" style="margin-left: 10px; margin-right: 10px; color: #fff;">
+                                    <table class="table table-responsive table-bordered" width="90%" style="border-color: #fff !important;">
+                                        <thead>
+                                            <th>Episode</th>
+                                            <th>File Size</th>
+                                            <th>Donwload</th>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach($season['episodes'] as $episode): ?>
+                                            <tr>
+                                                <td width="30%">
+                                                    <?php echo $episode['episodes_name'] ?>
+                                                </td>
+                                                <td width="30%">
+                                                    <?php echo $episode['file_size'] ?>
+                                                </td>
+                                                <td width="30%">
+                                                    <a class='btn btn-default btn-inline btn-sm' href="<?php echo urldecode($episode['file_url']); ?>"><span class="btn-label"><i class="fa fa-download"></i></span>
+                                                        <?php echo trans('download'); ?>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                    
+                                
+                                <hr>
+
                           <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
